@@ -11,16 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity
-            android:name=".MainActivity"
-            android:label="Popular Movies"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <dependency>
             <groupId>
@@ -45,7 +35,17 @@
                 android:value="com.example.prachi.movieapp.MoviePageActivity" />
         </activity>
         <activity android:name=".casteActivity" />
-        <activity android:name=".CastmembermovielistActivity"></activity>
+        <activity android:name=".CastmembermovielistActivity" />
+        <activity
+            android:name=".startingactivity"
+            android:label="@string/title_activity_startingactivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
