@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.prachi.movieapp.MoviePageActivity"
+    tools:showIn="@layout/activity_movie_page"
+    android:background="@color/black">
+    <LinearLayout
+        android:background="#20FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/moviepagetitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:textStyle="bold"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="6dp"
+            android:textSize="20dp"
+            android:padding="5dp"/>
+
+        <TextView
+            android:id="@+id/moviepagerating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/white"
+            android:padding="5dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="5dp">
+
+        <TextView
+            android:id="@+id/moivepagereleaseyear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textColor="#D3D3D3"
+            />
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:background="@drawable/greydot"
+                android:layout_gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/movieduration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#D3D3D3"/>
+            <View
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:background="@drawable/greydot"
+                android:layout_gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/moviegenre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#D3D3D3"
+               />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/moviepageoverview"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:textSize="14sp"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D3D3D3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/moviecast"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#20FFFFFF"/>
+        <Button
+            android:id="@+id/moviepagevedios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:background="#20FFFFFF"
+            android:padding="5dp"/>
+
+
+
+
+    </LinearLayout>
+
+
+
+</android.support.v4.widget.NestedScrollView>
