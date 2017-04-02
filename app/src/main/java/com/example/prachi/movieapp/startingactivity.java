@@ -106,9 +106,12 @@ public class startingactivity extends AppCompatActivity {
                 case 0:
                     return new PopularMovieFragment();
                 case 1:
-                    return new PopularMovieFragment();
+                    return new TopRatedMovieFragment();
                 case 2:
-                    return new PopularMovieFragment();
+                    return new UpcomingMovieFragment();
+                case 3:
+                    return new GenreFregment();
+
             }
             return null;
         }
@@ -116,7 +119,7 @@ public class startingactivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
@@ -125,9 +128,11 @@ public class startingactivity extends AppCompatActivity {
                 case 0:
                     return "POPULAR";
                 case 1:
-                    return "SECTION 2";
+                    return "TOP RATED";
                 case 2:
-                    return "SECTION 3";
+                    return "UPCOMING";
+                case 3:
+                    return "GENRES";
             }
             return null;
         }
