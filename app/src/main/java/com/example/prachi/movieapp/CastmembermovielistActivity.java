@@ -1,11 +1,14 @@
 package com.example.prachi.movieapp;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.prachi.movieapp.Network.ApiCLient;
 import com.example.prachi.movieapp.Network.ApiInterface;
@@ -34,9 +37,15 @@ public class CastmembermovielistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_castmembermovielist);
+        Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         Log.i("castmembermovielist","here");
         Intent i=getIntent();
         personid=i.getIntExtra("personId",-1);
+        actionBar.setTitle(i.getStringExtra("actorName")+"'s Movies");
         castmembermovielist=new ArrayList<>();
         castmovielist=new ArrayList<>();
         movieids=new ArrayList<>();
@@ -99,6 +108,13 @@ public class CastmembermovielistActivity extends AppCompatActivity {
         });
 
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            finish();
+        }
+        return true;
     }
 
 }

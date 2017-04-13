@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="270dp"
+    android:orientation="vertical" android:layout_width="130dp"
+    android:layout_height="200dp"
     android:padding="2dp">
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,11 +33,7 @@
                     android:gravity="bottom"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
-                <TextView
-                    android:textColor="#D3D3D3"
-                    android:id="@+id/charactername"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+
             </LinearLayout>
 
 

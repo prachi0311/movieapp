@@ -1,6 +1,7 @@
 package com.example.prachi.movieapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,7 +33,7 @@ public class GenreFregment extends Fragment{
             genres.add(item);
         }
         ListView listView=(ListView) view.findViewById(R.id.genrelistview);
-        adapter= new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,genre);
+        adapter= new ArrayAdapter<String>(getActivity(),R.layout.genrelistitem,genre);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

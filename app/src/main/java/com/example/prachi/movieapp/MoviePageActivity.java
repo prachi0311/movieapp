@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,6 +30,7 @@ import com.example.prachi.movieapp.Network.ApiCLient;
 import com.example.prachi.movieapp.Network.ApiInterface;
 import com.example.prachi.movieapp.Network.CastMovieInfo;
 import com.example.prachi.movieapp.Network.MovieTrailer;
+import com.example.prachi.movieapp.Network.moviecastresponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,7 +46,9 @@ public class MoviePageActivity extends AppCompatActivity {
     ArrayList<String> TrailerName;
     int Duration;
     TextView movieDuration;
-
+    castAdapter adapter;
+    ArrayList<MovieCast> castList;
+    ArrayList<castMovieListInfo> castmovielist;
 
 
     @Override
@@ -59,7 +66,11 @@ public class MoviePageActivity extends AppCompatActivity {
         TrailerName=new ArrayList<>();
        // Log.i("movieid",String.valueOf(movieid));
         ImageView backDropImage=(ImageView) findViewById(R.id.backdropimage);
+        if(i.getStringExtra("movieBackdropPath")!=null)
         Picasso.with(this).load("http://image.tmdb.org/t/p/w1000/"+i.getStringExtra("movieBackdropPath")+"?api_key=1b54ff0e150f8aa8199d7fac9a3c5751").into(backDropImage);
+        else
+            Picasso.with(this).load("http://image.tmdb.org/t/p/w1000/"+i.getStringExtra("moviePosterPath")+"?api_key=1b54ff0e150f8aa8199d7fac9a3c5751").into(backDropImage);
+
         TextView movieTitle=(TextView) findViewById(R.id.moviepagetitle);
         TextView movieRating=(TextView) findViewById(R.id.moviepagerating);
         TextView movieReleaseyear=(TextView) findViewById(R.id.moivepagereleaseyear);
@@ -75,8 +86,12 @@ public class MoviePageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browsingintent=new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.youtube.com/watch?v="+Trailerkey));
-                startActivity(browsingintent);
+//                Intent browsingintent=new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.youtube.com/watch?v="+Trailerkey));
+//                startActivity(browsingintent);
+                Intent i=new Intent();
+                i.putExtra("youtubestring",Trailerkey);
+                i.setClass(MoviePageActivity.this,PlayerView.class);
+                startActivity(i);
             }
         });
         final String str=String.valueOf(i.getFloatExtra("movieRating",0));
@@ -106,8 +121,12 @@ public class MoviePageActivity extends AppCompatActivity {
                 trailerlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent browsingintent=new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.youtube.com/watch?v="+movieTrailerlist.get(position).getKey()));
-                        startActivity(browsingintent);
+//                        Intent browsingintent=new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.youtube.com/watch?v="+movieTrailerlist.get(position).getKey()));
+//                        startActivity(browsingintent);
+                        Intent i=new Intent();
+                        i.putExtra("youtubestring",movieTrailerlist.get(position).getKey());
+                        i.setClass(MoviePageActivity.this,PlayerView.class);
+                        startActivity(i);
 
                     }
                 });
@@ -121,17 +140,16 @@ public class MoviePageActivity extends AppCompatActivity {
                 alert.create().show();
             }
         });
-        movieCast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent();
-                i.putExtra("movieid",movieid);
-                i.setClass(MoviePageActivity.this,casteActivity.class);
-                startActivity(i);
-
-            }
-        });
-
+        castList=new ArrayList<>();
+        final RecyclerView recyclerView=(RecyclerView) findViewById(R.id.castrecycleview);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(MoviePageActivity.this, LinearLayout.HORIZONTAL,false);
+        adapter=new castAdapter(castList,this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setNestedScrollingEnabled(true);
+        recyclerView.setFocusable(true);
+        fetchcast(movieid);
         fetchtrailers(movieid);
         fetchduration(movieid);
     }
@@ -168,9 +186,11 @@ public class MoviePageActivity extends AppCompatActivity {
                     movieTrailerlist.clear();
                     MovieTrailer body=response.body();
                     movieTrailerlist.addAll(body.getResults());
-                    Trailerkey=movieTrailerlist.get(0).getKey();
-                    for(int i=0;i<movieTrailerlist.size();i++) {
-                        TrailerName.add(i,movieTrailerlist.get(i).getName());
+                    if(movieTrailerlist.size()!=0) {
+                        Trailerkey = movieTrailerlist.get(0).getKey();
+                        for (int i = 0; i < movieTrailerlist.size(); i++) {
+                            TrailerName.add(i, movieTrailerlist.get(i).getName());
+                        }
                     }
                 }
             }
@@ -180,6 +200,30 @@ public class MoviePageActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void fetchcast(int id) {
+        Log.i("mvieid",String.valueOf(id));
+        ApiInterface apiinterface= ApiCLient.getApiinterface();
+        Call<moviecastresponse> call=apiinterface.getmoviecast(id);
+        call.enqueue(new Callback<moviecastresponse>() {
+            @Override
+            public void onResponse(Call<moviecastresponse> call, Response<moviecastresponse> response) {
+                if(response.isSuccessful()){
+                    castList.clear();
+                    moviecastresponse body=response.body();
+                    castList.addAll(body.getCast());
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<moviecastresponse> call, Throwable t) {
+                Log.d("castresponse",t.toString());
+
+            }
+        });
+
     }
 
 

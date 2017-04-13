@@ -26,6 +26,7 @@ public class genreMovieActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popular_movie_fragment);
+
         Intent i=getIntent();
         genreid=i.getIntExtra("genreid",-1);
         movielist=new ArrayList<>();

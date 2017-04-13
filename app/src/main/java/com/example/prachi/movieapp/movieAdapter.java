@@ -54,11 +54,14 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         String releasedate = "";
-        for (int i = 0; i < 4; i++) {
-            releasedate = releasedate + mmovielist.get(position).getReleasedate().charAt(i);
+        if(mmovielist.get(position).getReleasedate().length()>1) {
+            for (int i = 0; i < 4; i++) {
+                releasedate = releasedate + mmovielist.get(position).getReleasedate().charAt(i);
+            }
         }
         holder.moviename.setText(mmovielist.get(position).getTitle());
         holder.releasedate.setText(releasedate);
+        if(mmovielist.get(position).getPosterpath()!=null)
         Picasso.with(mcontext).load("http://image.tmdb.org/t/p/w342/" + mmovielist.get(position).getPosterpath() + "?api_key=1b54ff0e150f8aa8199d7fac9a3c5751").into(holder.movieimage);
         View.OnClickListener listener=new View.OnClickListener() {
             @Override
@@ -70,14 +73,17 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.ViewHolder>{
                 i.putExtra("movieReleaseDate",mmovielist.get(position).getReleasedate());
                 i.putExtra("movieBackdropPath",mmovielist.get(position).getBackdrop());
                 i.putExtra("movieOverview",mmovielist.get(position).getOverview());
+                i.putExtra("moviePosterPath",mmovielist.get(position).getPosterpath());
                 i.putExtra("movieRating",mmovielist.get(position).getRating());
                 i.putExtra("movieLanguage",mmovielist.get(position).getLanguage());
                 i.putExtra("movieId",mmovielist.get(position).getId());
                 i.setClass(mcontext,MoviePageActivity.class);
                 Set<Integer> set = genremapping.keySet();
-                for(Integer j : set){
-                    if(mmovielist.get(position).getGenres().get(0)==j){
-                        moviegenre=genremapping.get(j);
+                if(mmovielist.get(position).getGenres().size()!=0) {
+                    for (Integer j : set) {
+                        if (mmovielist.get(position).getGenres().get(0) == j) {
+                            moviegenre = genremapping.get(j);
+                        }
                     }
                 }
                 i.putExtra("movieGenre",moviegenre);

@@ -3,6 +3,7 @@ package com.example.prachi.movieapp.Network;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by prachi on 23/3/17.
@@ -33,6 +34,9 @@ public interface ApiInterface {
 
  @GET("genre/{genre_id}/movies?api_key=1b54ff0e150f8aa8199d7fac9a3c5751")
  Call<PopularMovies> getGenreMovies(@Path("genre_id") int genreid);
+
+ @GET("search/movie?api_key=1b54ff0e150f8aa8199d7fac9a3c5751")
+ Call<PopularMovies> getSearchedMovies(@Query("query") String searchesMovie);
 
 
 

@@ -40,7 +40,7 @@ public class castAdapter extends RecyclerView.Adapter<castAdapter.ViewHolder> {
     public void onBindViewHolder(castAdapter.ViewHolder holder, final int position) {
         Log.i("here","hereinbindview");
         holder.charactername.setText(mcastList.get(position).getName());
-        holder.characterplayed.setText(mcastList.get(position).getCharacter());
+       // holder.characterplayed.setText(mcastList.get(position).getCharacter());
         Picasso.with(mcontext).load("http://image.tmdb.org/t/p/w342/" + mcastList.get(position).getCastimage() + "?api_key=1b54ff0e150f8aa8199d7fac9a3c5751").into(holder.characterimage);
         View.OnClickListener listner=new View.OnClickListener() {
             @Override
@@ -48,13 +48,14 @@ public class castAdapter extends RecyclerView.Adapter<castAdapter.ViewHolder> {
 
                 Intent i=new Intent();
                 i.putExtra("personId",mcastList.get(position).getId());
+                i.putExtra("actorName",mcastList.get(position).getName());
                 i.setClass(mcontext,CastmembermovielistActivity.class);
                 mcontext.startActivity(i);
 
             }
         };
         holder.characterimage.setOnClickListener(listner);
-        holder.characterplayed.setOnClickListener(listner);
+        //holder.characterplayed.setOnClickListener(listner);
         holder.charactername.setOnClickListener(listner);
 
     }
@@ -72,7 +73,7 @@ public class castAdapter extends RecyclerView.Adapter<castAdapter.ViewHolder> {
             super(itemView);
             characterimage=(ImageView) itemView.findViewById(R.id.characterimage);
             charactername=(TextView) itemView.findViewById(R.id.castmembername);
-            characterplayed=(TextView) itemView.findViewById(R.id.charactername);
+            //characterplayed=(TextView) itemView.findViewById(R.id.charactername);
         }
     }
 }

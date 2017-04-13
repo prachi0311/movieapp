@@ -1,9 +1,15 @@
 package com.example.prachi.movieapp;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -17,7 +23,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.prachi.movieapp.Network.ApiCLient;
+import com.example.prachi.movieapp.Network.ApiInterface;
+import com.example.prachi.movieapp.Network.PopularMovies;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class startingactivity extends AppCompatActivity {
 
@@ -37,15 +55,18 @@ public class startingactivity extends AppCompatActivity {
     private ViewPager mViewPager;
     TabLayout tablayout;
     PopularMovieFragment popularMovieFragment;
+    EditText moviesearch;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startingactivity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tablayout=(TabLayout) findViewById(R.id.tablayout);
+        moviesearch=(EditText) findViewById(R.id.moviesearch);
         popularMovieFragment=new PopularMovieFragment();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -60,8 +81,7 @@ public class startingactivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
             }
         });
 
@@ -70,27 +90,63 @@ public class startingactivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+       //  Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_startingactivity, menu);
-        return true;
+        MenuItem searchItem = menu.findItem(R.id.search_button);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
+//        searchView.setOnQueryTextListener(n);
+//        SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        if(searchManager!=null){
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setIconifiedByDefault(false);
+//        searchView.setSubmitButtonEnabled(true);}
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                //Toast.makeText(startingactivity.this,query,Toast.LENGTH_SHORT).show();
+//                ApiInterface apiInterface= ApiCLient.getApiinterface();
+//                Call call=apiInterface.getSearchedMovies(query);
+//                call.enqueue(new Callback() {
+//                    @Override
+//                    public void onResponse(Call call, Response response) {
+//                        if(response.isSuccessful()){
+//                            movielist.clear();
+//                            PopularMovies body=response.body();
+//                            movielist.addAll(body.getMovieinfo());
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call call, Throwable t) {
+//
+//                    }
+//                });
+//
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//
+//                return false;
+//            }
+//        });
+//
+//
+      return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if(item.getItemId()==R.id.search_button){
+            Intent i=new Intent();
+            i.setClass(startingactivity.this,SearchActivity.class);
+            startActivity(i);
         }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
-
-
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -103,13 +159,13 @@ public class startingactivity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
            // return PlaceholderFragment.newInstance(position + 1);
             switch (position) {
-                case 0:
-                    return new PopularMovieFragment();
-                case 1:
-                    return new TopRatedMovieFragment();
                 case 2:
-                    return new UpcomingMovieFragment();
+                    return new PopularMovieFragment();
                 case 3:
+                    return new TopRatedMovieFragment();
+                case 1:
+                    return new UpcomingMovieFragment();
+                case 0:
                     return new GenreFregment();
 
             }
@@ -125,13 +181,13 @@ public class startingactivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0:
-                    return "POPULAR";
-                case 1:
-                    return "TOP RATED";
                 case 2:
-                    return "UPCOMING";
+                    return "POPULAR";
                 case 3:
+                    return "TOP RATED";
+                case 1:
+                    return "UPCOMING";
+                case 0:
                     return "GENRES";
             }
             return null;

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">movieapp</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -97,4 +97,8 @@
     </string>
     <string name="title_activity_startingactivity">startingactivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="playerview_text">This is a YouTubePlayerView!</string>
+
+
 </resources>

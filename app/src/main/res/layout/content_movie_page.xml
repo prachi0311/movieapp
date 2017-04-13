@@ -104,6 +104,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/castrecycleview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="8dp"
+            android:padding="5dp"></android.support.v7.widget.RecyclerView>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
