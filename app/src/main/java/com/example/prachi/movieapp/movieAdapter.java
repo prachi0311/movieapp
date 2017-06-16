@@ -25,12 +25,14 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.ViewHolder>{
     ArrayList<MovieInfo> mmovielist;
     View view;
     String moviegenre;
+    String sessionid;
 
     HashMap<Integer,String> genremapping;
 
-    public movieAdapter(Context context, ArrayList<MovieInfo> movielist){
+    public movieAdapter(Context context, ArrayList<MovieInfo> movielist,String sessionId){
         mcontext=context;
         mmovielist=movielist;
+        sessionid=sessionId;
         int[] id={28,12,16,35,80,99,18,10751,14,36,27,10402,9648,10749,878,10770,53,10752,37};
         String[] genre={"Action","Adventure","Animation","Comedy","Crime","Documentary","Drama","Family","Fantasy","History","Horror","Music","Mystery","Romance","Science Fiction","Tv Movie","Thriller","War","Western"};
            genremapping=new HashMap<>();
@@ -77,6 +79,7 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.ViewHolder>{
                 i.putExtra("movieRating",mmovielist.get(position).getRating());
                 i.putExtra("movieLanguage",mmovielist.get(position).getLanguage());
                 i.putExtra("movieId",mmovielist.get(position).getId());
+                i.putExtra("sessionID",sessionid);
                 i.setClass(mcontext,MoviePageActivity.class);
                 Set<Integer> set = genremapping.keySet();
                 if(mmovielist.get(position).getGenres().size()!=0) {

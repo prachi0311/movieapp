@@ -1,9 +1,21 @@
 package com.example.prachi.movieapp.Network;
 
+import com.example.prachi.movieapp.RequestValidation;
+import com.example.prachi.movieapp.ratemovieresponse;
+import com.example.prachi.movieapp.ratingrequestbody;
+import com.example.prachi.movieapp.requestToken;
+import com.example.prachi.movieapp.sessionId;
+import com.squareup.picasso.Callback;
+
+import java.util.Map;
+
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by prachi on 23/3/17.
@@ -38,7 +50,20 @@ public interface ApiInterface {
  @GET("search/movie?api_key=1b54ff0e150f8aa8199d7fac9a3c5751")
  Call<PopularMovies> getSearchedMovies(@Query("query") String searchesMovie);
 
+ @GET("movie/{movie_id}/reviews?api_key=1b54ff0e150f8aa8199d7fac9a3c5751")
+ Call<ReviewResponse> getmoviereviews(@Path("movie_id") int movie_id);
 
+ @GET("authentication/token/new?api_key=1b54ff0e150f8aa8199d7fac9a3c5751")
+ Call<requestToken> getRequestoken();
+
+ @GET("authentication/token/validate_with_login?api_key=1b54ff0e150f8aa8199d7fac9a3c5751")
+ Call<RequestValidation> validaterequesttoken(@QueryMap Map<String,String> options);
+
+@GET("authentication/session/new?api_key=1b54ff0e150f8aa8199d7fac9a3c5751")
+ Call<sessionId> getsessionId(@Query("request_token") String request_token);
+
+ @POST("movie/{movie_id}/rating?api_key=1b54ff0e150f8aa8199d7fac9a3c5751")
+ Call<ratemovieresponse> postmovierating(@Path("movie_id") int movie_id, @Query("session_id") String session_id, @Body ratingrequestbody requestbody);
 
 
 

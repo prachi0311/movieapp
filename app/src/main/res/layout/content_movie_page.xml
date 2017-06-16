@@ -7,7 +7,11 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.prachi.movieapp.MoviePageActivity"
     tools:showIn="@layout/activity_movie_page"
-    android:background="@color/black">
+    android:id="@+id/nestedscrollingview"
+    android:background="@color/black"
+    >
+
+
     <LinearLayout
         android:background="#20FFFFFF"
         android:layout_width="match_parent"
@@ -25,6 +29,7 @@
             android:textSize="20dp"
             android:padding="5dp"/>
 
+
         <TextView
             android:id="@+id/moviepagerating"
             android:layout_width="wrap_content"
@@ -33,45 +38,67 @@
             android:layout_marginRight="10dp"
             android:textColor="@color/white"
             android:padding="5dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:orientation="horizontal"
             android:padding="5dp">
 
-        <TextView
-            android:id="@+id/moivepagereleaseyear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:textColor="#D3D3D3"
-            />
+            <TextView
+                android:id="@+id/moivepagereleaseyear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#D3D3D3" />
 
             <View
                 android:layout_width="5dp"
                 android:layout_height="5dp"
-                android:background="@drawable/greydot"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/greydot" />
+
             <TextView
                 android:id="@+id/movieduration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#D3D3D3"/>
+                android:textColor="#D3D3D3" />
+
             <View
                 android:layout_width="5dp"
                 android:layout_height="5dp"
-                android:background="@drawable/greydot"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/greydot" />
+
             <TextView
                 android:id="@+id/moviegenre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#D3D3D3"
-               />
+                android:textColor="#D3D3D3" />
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
 
         </LinearLayout>
+        <ImageView
+            android:id="@+id/rate"
+            android:layout_marginRight="10dp"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:src="@drawable/rate_icon"/>
+
+    </LinearLayout>
 
         <TextView
             android:id="@+id/moviepageoverview"
@@ -84,9 +111,11 @@
             android:gravity="center_vertical"
             android:paddingLeft="5dp"
             android:textSize="14sp"
+            android:paddingTop="10dp"
             android:paddingRight="5dp"
-            android:paddingTop="15dp"
             android:paddingBottom="15dp"/>
+
+
 
         <View
             android:layout_width="match_parent"
@@ -116,21 +145,59 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="5dp"
             android:background="#20FFFFFF"/>
-        <Button
-            android:id="@+id/moviepagevedios"
+        <LinearLayout
+            android:id="@+id/reviewLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/reviews"
+            android:layout_width="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="5dp"
+            android:text="REVIEWS"
             android:textColor="@color/white"
-            android:background="#20FFFFFF"
-            android:padding="5dp"/>
+            android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/dropdownimage"
+                android:layout_marginEnd="10dp"
+                android:padding="5dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:src="@drawable/whitedowmarrow"/>
+
+
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/reviewlist"/>
+
+        <TextView
+            android:layout_marginEnd="5dp"
+            android:visibility="gone"
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_gravity="end"
+            android:text="close"/>
 
 
 
 
     </LinearLayout>
-
 
 
 </android.support.v4.widget.NestedScrollView>

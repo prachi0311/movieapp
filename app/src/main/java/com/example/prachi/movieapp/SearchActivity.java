@@ -39,7 +39,7 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView recyclerView=(RecyclerView) findViewById(R.id.searchrecycleview);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager= new GridLayoutManager(this,2);
-        adapter=new movieAdapter(this,movielist);
+        adapter=new movieAdapter(this,movielist,null);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
        // fetchSearchedMovies();
@@ -48,7 +48,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //  Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_startingactivity, menu);
+        getMenuInflater().inflate(R.menu.searchviewmenu, menu);
         MenuItem searchItem = menu.findItem(R.id.search_button);
 
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -58,6 +58,7 @@ public class SearchActivity extends AppCompatActivity {
           searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 //        searchView.setIconifiedByDefault(false);
         searchView.setSubmitButtonEnabled(true);
+        searchView.setIconified(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -73,7 +74,7 @@ public class SearchActivity extends AppCompatActivity {
                             movielist.addAll(body.getMovieinfo());
                             Log.i("searchresponse",String.valueOf(movielist.size()));
                             for(int i=0;i<movielist.size();i++){
-                                if(movielist.get(i).getPosterpath()==null || movielist.get(i).getBackdrop()==null || movielist.get(i).getReleasedate().equals("")){
+                                if(movielist.get(i).getPosterpath()==null || movielist.get(i).getBackdrop()==null ){
                                     movielist.remove(i);
                                 }
                             }
@@ -94,7 +95,8 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+                movielist.clear();
+                adapter.notifyDataSetChanged();
                 return false;
             }
         });

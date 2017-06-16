@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +33,8 @@ import com.example.prachi.movieapp.Network.ApiInterface;
 import com.example.prachi.movieapp.Network.PopularMovies;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,17 +60,28 @@ public class startingactivity extends AppCompatActivity {
     PopularMovieFragment popularMovieFragment;
     EditText moviesearch;
     Toolbar toolbar;
+    String request_token;
+    String password;
+    String username;
+    String sessionId;
+    Map<String, String> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startingactivity);
-
+        Intent i = getIntent();
+        username = i.getStringExtra("username");
+        password = i.getStringExtra("password");
+        sessionId=i.getStringExtra("sessionID");
+      //  gettoken();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        tablayout=(TabLayout) findViewById(R.id.tablayout);
-        moviesearch=(EditText) findViewById(R.id.moviesearch);
-        popularMovieFragment=new PopularMovieFragment();
+        tablayout = (TabLayout) findViewById(R.id.tablayout);
+        moviesearch = (EditText) findViewById(R.id.moviesearch);
+        data = new HashMap<>();
+
+        popularMovieFragment = new PopularMovieFragment();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -77,24 +91,28 @@ public class startingactivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tablayout.setupWithViewPager(mViewPager);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-       //  Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_startingactivity, menu);
-        MenuItem searchItem = menu.findItem(R.id.search_button);
 
-        SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+
+        @Override
+        public boolean onCreateOptionsMenu (Menu menu){
+            //  Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.menu_startingactivity, menu);
+            MenuItem searchItem = menu.findItem(R.id.search_icon);
+
+            SearchView searchView = (SearchView) searchItem.getActionView();
 //        searchView.setOnQueryTextListener(n);
 //        SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
 //        if(searchManager!=null){
@@ -135,62 +153,71 @@ public class startingactivity extends AppCompatActivity {
 //        });
 //
 //
-      return true;
-    }
+            return true;
+        }
+
+        @Override
+        public boolean onOptionsItemSelected (MenuItem item){
+            if (item.getItemId() == R.id.search_icon) {
+                Intent i = new Intent();
+                i.setClass(startingactivity.this, SearchActivity.class);
+                startActivity(i);
+            }
+            return true;
+        }
+        public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+            public SectionsPagerAdapter(FragmentManager fm) {
+                super(fm);
+            }
+
+            @Override
+            public Fragment getItem(int position) {
+                // getItem is called to instantiate the fragment for the given page.
+                // Return a PlaceholderFragment (defined as a static inner class below).
+                // return PlaceholderFragment.newInstance(position + 1);
+                switch (position) {
+                    case 2:
+                        return new PopularMovieFragment();
+                    case 3:
+                        return new TopRatedMovieFragment();
+                    case 1:
+                        return new UpcomingMovieFragment();
+                    case 0:
+                        return new GenreFregment();
+
+                }
+                return null;
+            }
+
+            @Override
+            public int getCount() {
+                // Show 3 total pages.
+                return 4;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                switch (position) {
+                    case 2:
+                        return "POPULAR";
+                    case 3:
+                        return "TOP RATED";
+                    case 1:
+                        return "UPCOMING";
+                    case 0:
+                        return "GENRES";
+                }
+                return null;
+            }
+        }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.search_button){
-            Intent i=new Intent();
-            i.setClass(startingactivity.this,SearchActivity.class);
-            startActivity(i);
-        }
-        return true;
-    }
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-           // return PlaceholderFragment.newInstance(position + 1);
-            switch (position) {
-                case 2:
-                    return new PopularMovieFragment();
-                case 3:
-                    return new TopRatedMovieFragment();
-                case 1:
-                    return new UpcomingMovieFragment();
-                case 0:
-                    return new GenreFregment();
-
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 4;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 2:
-                    return "POPULAR";
-                case 3:
-                    return "TOP RATED";
-                case 1:
-                    return "UPCOMING";
-                case 0:
-                    return "GENRES";
-            }
-            return null;
-        }
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 }
+

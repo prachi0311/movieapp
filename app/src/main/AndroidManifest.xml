@@ -4,10 +4,15 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/movielogo"
+        android:label="MovieTime"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -37,13 +42,9 @@
         <activity android:name=".CastmembermovielistActivity" />
         <activity
             android:name=".startingactivity"
-            android:label="@string/title_activity_startingactivity"
+            android:label="MovieTime"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
@@ -52,7 +53,16 @@
         <activity android:name=".genreMovieActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".PlayerView" />
-        <activity android:name=".YouTubeFailureRecoveryActivity"></activity>
+        <activity android:name=".YouTubeFailureRecoveryActivity" />
+        <activity android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

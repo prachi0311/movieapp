@@ -28,6 +28,7 @@ public class UpcomingMovieFragment extends Fragment {
     MovieInfo movieobject=new MovieInfo();
     ArrayList<MovieInfo> movielist;
     movieAdapter adapter;
+    String sessionid;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -36,7 +37,8 @@ public class UpcomingMovieFragment extends Fragment {
         RecyclerView recyclerView=(RecyclerView) view.findViewById(R.id.recycleview);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager= new GridLayoutManager(getActivity(),2);
-        adapter=new movieAdapter(getActivity(),movielist);
+        sessionid=getActivity().getIntent().getStringExtra("sessionID");
+        adapter=new movieAdapter(getActivity(),movielist,sessionid);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
         fetchPopularMovies();

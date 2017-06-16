@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -21,17 +24,25 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.prachi.movieapp.Network.ApiCLient;
 import com.example.prachi.movieapp.Network.ApiInterface;
 import com.example.prachi.movieapp.Network.CastMovieInfo;
 import com.example.prachi.movieapp.Network.MovieTrailer;
+import com.example.prachi.movieapp.Network.ReviewAdapter;
+import com.example.prachi.movieapp.Network.ReviewResponse;
 import com.example.prachi.movieapp.Network.moviecastresponse;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -39,18 +50,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.R.id.list;
+//import static com.example.prachi.movieapp.R.id.nestedscrollingview;
+import static com.example.prachi.movieapp.R.id.reviewlist;
+import static com.example.prachi.movieapp.R.id.scroll;
+import static com.example.prachi.movieapp.R.id.scrollView;
+
 public class MoviePageActivity extends AppCompatActivity {
     int movieid;
     ArrayList<movieTrailers> movieTrailerlist;
     String Trailerkey;
     ArrayList<String> TrailerName;
     int Duration;
+    TrailerAdapter traileradapter;
     TextView movieDuration;
     castAdapter adapter;
     ArrayList<MovieCast> castList;
-    ArrayList<castMovieListInfo> castmovielist;
-
-
+    Button rate;
+   Spinner spinner;
+    ReviewAdapter reviewadapter;
+    ArrayList<reviewobjecttype> reviewList;
+    ArrayList<String> reviews;
+    ArrayList<String> authors;
+    EditText rating;
+    String sessionid;
+    NestedScrollView scrollview;
+    RecyclerView trailerrecyclerView;
+    ImageView moviepagebg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +87,13 @@ public class MoviePageActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         Intent i=getIntent();
+        sessionid=i.getStringExtra("sessionID");
         movieid=i.getIntExtra("movieId",-1);
         movieTrailerlist=new ArrayList<>();
         TrailerName=new ArrayList<>();
+        reviews=new ArrayList<>();
+        authors=new ArrayList<>();
+        reviewList=new ArrayList<>();
        // Log.i("movieid",String.valueOf(movieid));
         ImageView backDropImage=(ImageView) findViewById(R.id.backdropimage);
         if(i.getStringExtra("movieBackdropPath")!=null)
@@ -77,23 +107,72 @@ public class MoviePageActivity extends AppCompatActivity {
         TextView moviOverview=(TextView) findViewById(R.id.moviepageoverview);
         TextView moviegenre=(TextView) findViewById(R.id.moviegenre);
         TextView movieCast=(TextView) findViewById(R.id.moviecast);
+        scrollview=(NestedScrollView) findViewById(R.id.nestedscrollingview);
+       // moviepagebg=(ImageView) findViewById(R.id.moviepagebg);
+       // trailerrecyclerView=(RecyclerView) findViewById(R.id.trailerrrecycleview);
+        final TextView review=(TextView) findViewById(R.id.reviews);
+        final TextView close=(TextView) findViewById(R.id.close);
+        close.setPaintFlags(close.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        ImageView reviewdrop=(ImageView) findViewById(R.id.dropdownimage);
+        ImageView rate=(ImageView) findViewById(R.id.rate);
+        spinner=(Spinner) findViewById(R.id.spinner);
+        rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               final AlertDialog.Builder b= new  AlertDialog.Builder(MoviePageActivity.this);
+                View view=getLayoutInflater().inflate(R.layout.rate_dialog,null);
+                rating=(EditText) view.findViewById(R.id.dialograting);
+                b.setView(view);
+                b.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                      ApiInterface apiInterface=ApiCLient.getApiinterface();
+                      Call<ratemovieresponse> call= apiInterface.postmovierating(movieid, sessionid, new ratingrequestbody(Integer.valueOf(rating.getText().toString())));
+                       call.enqueue(new Callback<ratemovieresponse>() {
+                           @Override
+                           public void onResponse(Call<ratemovieresponse> call, Response<ratemovieresponse> response) {
+                               Log.i("rateresponse","not successfull");
+                               if(response.isSuccessful()){
+                                   Toast.makeText(MoviePageActivity.this,"rated successfully",Toast.LENGTH_SHORT).show();
+                               }
+                           }
+
+                           @Override
+                           public void onFailure(Call<ratemovieresponse> call, Throwable t) {
+                               Log.i("rateresponse","failure");
+
+                           }
+                       });
+                        }
+                });
+                b.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        b.setCancelable(true);
+                    }
+                });
+
+                b.create().show();
+            }
+        });
         movieDuration=(TextView) findViewById(R.id.movieduration);
-        Button movievideos=(Button) findViewById(R.id.moviepagevedios);
+       // Button movievideos=(Button) findViewById(R.id.moretrailers);
         Window window=getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Intent browsingintent=new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.youtube.com/watch?v="+Trailerkey));
-//                startActivity(browsingintent);
-                Intent i=new Intent();
-                i.putExtra("youtubestring",Trailerkey);
-                i.setClass(MoviePageActivity.this,PlayerView.class);
-                startActivity(i);
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                Intent browsingintent=new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.youtube.com/watch?v="+Trailerkey));
+////                startActivity(browsingintent);
+//                Intent i=new Intent();
+//                i.putExtra("youtubestring",Trailerkey);
+//                i.setClass(MoviePageActivity.this,PlayerView.class);
+//                startActivity(i);
+//            }
+//        });
         final String str=String.valueOf(i.getFloatExtra("movieRating",0));
         movieTitle.setText(i.getStringExtra("movieTitle"));
         movieRating.setText( "RATING   " + str);
@@ -106,31 +185,22 @@ public class MoviePageActivity extends AppCompatActivity {
         movieReleaseyear.setText(releaseyear+" ");
         moviegenre.setText(" "+i.getStringExtra("movieGenre"));
         moviOverview.setText(i.getStringExtra("movieOverview"));
-        movievideos.setText("Watch more trailers");
+        //movievideos.setText("Watch more trailers");
         movieCast.setText("CAST");
-        movievideos.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder alert=new AlertDialog.Builder(MoviePageActivity.this);
+                final AlertDialog.Builder alert=new AlertDialog.Builder(MoviePageActivity.this,R.style.MyAlertDialogTheme);
                 View view= getLayoutInflater().inflate(R.layout.trailerdilog,null);
                 alert.setView(view);
                 alert.setCancelable(false);
-                ListView trailerlist=(ListView) view.findViewById(R.id.trailerlist);
-                ArrayAdapter<String> adapter=new ArrayAdapter<String>(MoviePageActivity.this,android.R.layout.simple_list_item_1,TrailerName);
-                trailerlist.setAdapter(adapter);
-                trailerlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        Intent browsingintent=new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.youtube.com/watch?v="+movieTrailerlist.get(position).getKey()));
-//                        startActivity(browsingintent);
-                        Intent i=new Intent();
-                        i.putExtra("youtubestring",movieTrailerlist.get(position).getKey());
-                        i.setClass(MoviePageActivity.this,PlayerView.class);
-                        startActivity(i);
-
-                    }
-                });
-
+                RecyclerView trailerrecyclerView=(RecyclerView) view.findViewById(R.id.trailerrrecycleview);
+                trailerrecyclerView.setHasFixedSize(true);
+                RecyclerView.LayoutManager TrailerlayoutManager= new LinearLayoutManager(MoviePageActivity.this, LinearLayout.VERTICAL,false);
+                traileradapter=new TrailerAdapter(movieTrailerlist,MoviePageActivity.this);
+                trailerrecyclerView.setAdapter(traileradapter);
+                trailerrecyclerView.setLayoutManager(TrailerlayoutManager);
+                traileradapter.notifyDataSetChanged();
                 alert.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -147,11 +217,122 @@ public class MoviePageActivity extends AppCompatActivity {
         adapter=new castAdapter(castList,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setNestedScrollingEnabled(true);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setFocusable(true);
+        final RecyclerView reviewlist=(RecyclerView) findViewById(R.id.reviewlist);
+        RecyclerView.LayoutManager reviewlayoutManager= new LinearLayoutManager(MoviePageActivity.this, LinearLayout.VERTICAL,false);
+        reviewlist.setLayoutManager(reviewlayoutManager);
+        reviewlist.setNestedScrollingEnabled(false);
+        reviewadapter=new ReviewAdapter(this,reviewList);
+        reviewlist.setAdapter(reviewadapter);
+
+        final LinearLayout reviewLayout = (LinearLayout) findViewById(R.id.reviewLayout);
+        reviewLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(reviewlist.getVisibility()==View.VISIBLE){
+
+                    reviewlist.setVisibility(View.GONE);
+                    close.setVisibility(View.GONE);}
+
+                else {
+
+                    scrollview.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollview.fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    });
+                    close.setVisibility(View.VISIBLE);
+                    reviewlist.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
+//        review.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(reviewlist.getVisibility()==View.VISIBLE){
+//
+//                reviewlist.setVisibility(View.GONE);
+//                close.setVisibility(View.GONE);}
+//
+//                else {
+//
+//                    scrollview.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            scrollview.smoothScrollTo(0,scrollview.getBottom()-50);
+//                        }
+//                    });
+//                    close.setVisibility(View.VISIBLE);
+//                    reviewlist.setVisibility(View.VISIBLE);
+//
+//                }
+//
+//            }
+//        });
+//        reviewdrop.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(reviewlist.getVisibility()==View.VISIBLE){
+//                    reviewlist.setVisibility(View.GONE);
+//                    close.setVisibility(View.GONE);}
+//                else {
+//                    scrollview.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            scrollview.smoothScrollTo(0,scrollview.getBottom()-50);
+//                        }
+//                    });
+//                    close.setVisibility(View.VISIBLE);
+//                    reviewlist.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                close.setVisibility(View.GONE);
+                reviewlist.setVisibility(View.GONE);
+                scrollview.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollview.fullScroll(ScrollView.FOCUS_UP);
+                    }
+                });
+
+            }
+        });
         fetchcast(movieid);
         fetchtrailers(movieid);
         fetchduration(movieid);
+        fetchreviews(movieid);
+    }
+
+    private void fetchreviews(int movieid) {
+        ApiInterface apiinterface= ApiCLient.getApiinterface();
+        Call<ReviewResponse> dcall=apiinterface.getmoviereviews(movieid);
+        dcall.enqueue(new Callback<ReviewResponse>() {
+            @Override
+            public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+               ReviewResponse body=response.body();
+                reviewList.addAll(body.getResults());
+                for(int i=0;i<reviewList.size();i++){
+                    reviews.add(reviewList.get(i).getContent());
+                    authors.add(reviewList.get(i).getAuthor());
+                }
+                reviewadapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<ReviewResponse> call, Throwable t) {
+
+            }
+        });
+
+
     }
 
     private void fetchduration(int movieid) {
@@ -235,9 +416,5 @@ public class MoviePageActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("destroyed","due to cast activity");
-    }
+
 }

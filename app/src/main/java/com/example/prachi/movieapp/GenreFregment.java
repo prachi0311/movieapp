@@ -41,6 +41,7 @@ public class GenreFregment extends Fragment{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i=new Intent();
                 i.putExtra("genreid",genreid[position]);
+                i.putExtra("genrename",genres.get(position).getGenrename());
                 i.setClass(getActivity(),genreMovieActivity.class);
                 getActivity().startActivity(i);
             }

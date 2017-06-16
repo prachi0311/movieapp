@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.prachi.movieapp.LoginActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/app_bg"
+        android:foreground="@drawable/foregroundblack"/>
+
+
+    <LinearLayout
+        android:id="@+id/linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_marginTop="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/logo"
+            android:src="@drawable/movietitle"/>
+
+        <EditText
+
+            android:backgroundTint="@color/white"
+            android:id="@+id/username"
+            android:layout_marginTop="140dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:hint="username"
+            android:inputType="text"
+            android:textColorHint="#d3d3d3"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            />
+        <EditText
+            android:inputType="textPassword"
+            android:backgroundTint="@color/white"
+            android:id="@+id/password"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:hint="password"
+            android:textColorHint="#d3d3d3"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="15dp"/>
+        <LinearLayout
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:background="@drawable/blue_bg"
+                android:id="@+id/login"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:textColor="@color/white"
+                android:text="Login"
+                />
+            <View
+                android:layout_width="10dp"
+                android:layout_height="40dp"/>
+            <Button
+                android:textColor="@color/white"
+                android:background="@drawable/blue_bg"
+                android:id="@+id/signup"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:text="Sign Up"
+                />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/skip"
+            android:layout_marginTop="40dp"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="skip login"
+            android:textColor="@color/white"
+            android:layout_gravity="center"/>
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
